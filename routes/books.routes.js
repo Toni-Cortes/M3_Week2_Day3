@@ -1,5 +1,6 @@
 const router = require('express').Router()
 
+const Author = require('../models/Author.model')
 const Book = require('../models/Book.model')
 
 
@@ -9,6 +10,7 @@ const Book = require('../models/Book.model')
 router.get('/books',(req,res)=>{
 
     Book.find()
+    .populate('author')
     .then((allBooks)=>{
         res.json(allBooks)
     })
@@ -21,6 +23,7 @@ router.get('/books',(req,res)=>{
 router.get('/books/:id',(req,res)=>{
 
     Book.findById(req.params.id)
+    .populate('author')
     .then((foundBook)=>{res.json(foundBook)})
     .catch((err)=>{res.json(err)})
 })
@@ -29,17 +32,39 @@ router.get('/books/:id',(req,res)=>{
 // Exercise 1:
 //      1. Write the POST endpoint for creating a new book
 
+
+router.post('/books',async(req,res)=>{
+
+    // create the book
+
+    const createdBook = await Book.create(req.body)
+
+    console.log(createdBook._id)
+
+    // add the book id to the author
+    const updatedAuthor = await Author.findByIdAndUpdate(req.body.author,{$push:{books:createdBook._id}})
+
+    res.redirect(`/books/${createdBook._id}`)
+})
+
+
 router.post('/books',(req,res)=>{
+
 
     Book.create(req.body)
     .then((createdBook)=>{
 
-        res.json(createdBook)
+
+        res.redirect(`/books/${createdBook._id}`)
+        // res.json(createdBook)
     })
     .catch((err)=>{
         res.json(err)
     })
 })
+
+
+
 
 
 // Update
@@ -66,6 +91,18 @@ router.delete('/books/:id',async (req,res)=>{
         res.json(err)
     }
 
+})
+
+
+router.get('/books/genre/:genre',(req,res)=>{
+
+    Book.find({genre:req.params.genre})
+    .then((foundBooks)=>{
+        res.json(foundBooks)
+    })
+    .catch((err)=>{
+        res.json(err)
+    })
 })
 
 

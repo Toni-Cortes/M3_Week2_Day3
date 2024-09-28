@@ -11,6 +11,15 @@ router.post('/authors',(req,res)=>{
 })
 
 
+router.get('/authors',(req,res)=>{
+
+    Author.find()
+    .populate('books')
+    .then((allAuthors)=>{res.json(allAuthors)})
+    .catch((err)=>{res.json(err)})
+})
+
+
 
 
 

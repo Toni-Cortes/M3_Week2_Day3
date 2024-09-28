@@ -16,7 +16,8 @@ const bookSchema = new mongoose.Schema({
         type: Number
     },
     genre:{
-        type:String
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"Genre"
     }
 })
 

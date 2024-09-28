@@ -2,6 +2,7 @@ const router = require('express').Router()
 
 const Author = require('../models/Author.model')
 const Book = require('../models/Book.model')
+const Genre = require('../models/Genre.model')
 
 
 
@@ -10,7 +11,7 @@ const Book = require('../models/Book.model')
 router.get('/books',(req,res)=>{
 
     Book.find()
-    .populate('author')
+    .populate('author genre')
     .then((allBooks)=>{
         res.json(allBooks)
     })
@@ -23,8 +24,14 @@ router.get('/books',(req,res)=>{
 router.get('/books/:id',(req,res)=>{
 
     Book.findById(req.params.id)
-    .populate('author')
-    .then((foundBook)=>{res.json(foundBook)})
+    .populate('author genre')
+    .then((foundBook)=>{
+        if(!foundBook){
+            res.status(404).json({message:"No Book with associated Id"})
+            return
+        }
+        res.json(foundBook)
+    })
     .catch((err)=>{res.json(err)})
 })
 
@@ -43,6 +50,8 @@ router.post('/books',async(req,res)=>{
 
     // add the book id to the author
     const updatedAuthor = await Author.findByIdAndUpdate(req.body.author,{$push:{books:createdBook._id}})
+
+    await Genre.findByIdAndUpdate(req.body.genre,{$push:{books:createdBook._id}})
 
     res.redirect(`/books/${createdBook._id}`)
 })

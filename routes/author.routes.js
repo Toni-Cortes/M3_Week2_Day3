@@ -14,7 +14,12 @@ router.post('/authors',(req,res)=>{
 router.get('/authors',(req,res)=>{
 
     Author.find()
-    .populate('books')
+    .populate({
+        path:"books",
+        populate:{
+            path:"genre"
+        }
+    })
     .then((allAuthors)=>{res.json(allAuthors)})
     .catch((err)=>{res.json(err)})
 })
@@ -26,7 +31,12 @@ router.get('/authors',(req,res)=>{
 router.get('/authors/:id',(req,res)=>{
 
     Author.findById(req.params.id)
-    .populate('books')
+    .populate({
+        path:"books",
+        populate:{
+            path:"genre"
+        }
+    })
     .then((foundAuthor)=>{res.json(foundAuthor)})
     .catch((err)=>{res.json(err)})
 })

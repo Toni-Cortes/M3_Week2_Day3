@@ -22,6 +22,8 @@ app.use('/api',require('./routes/author.routes.js'))
 
 app.use('/',require('./routes/books.routes.js'))
 
+app.use('/',require('./routes/genres.routes.js'))
+
 
 
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes

@@ -8,7 +8,9 @@ const bookSchema = new mongoose.Schema({
         type:String
     },
     author:{
-        type:String
+        // author field is now a type of ObjectId
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"Author"
     },
     pageNumbers:{
         type: Number

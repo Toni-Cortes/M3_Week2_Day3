@@ -1,12 +1,16 @@
 const router = require('express').Router()
 
+const Author = require('../models/Author.model')
 
 
+router.post('/authors',(req,res)=>{
 
-router.get('/authors',(req,res)=>{
-
-    res.json("all Authors")
+    Author.create(req.body)
+    .then((createdAuthor)=>{res.json(createdAuthor)})
+    .catch((err)=>{res.json(err)})
 })
+
+
 
 
 

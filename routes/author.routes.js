@@ -20,8 +20,16 @@ router.get('/authors',(req,res)=>{
 })
 
 
+// Exercise 2: create a GET route to get 1 author. This route should also show all the books the author has written not just the ids
 
 
+router.get('/authors/:id',(req,res)=>{
+
+    Author.findById(req.params.id)
+    .populate('books')
+    .then((foundAuthor)=>{res.json(foundAuthor)})
+    .catch((err)=>{res.json(err)})
+})
 
 
 
